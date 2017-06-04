@@ -13,16 +13,14 @@
 
 (require "part1-helpers.rkt")
 
-(define (improve guess x)
-  (average guess (/ x guess)))
-
-(define (sqrt-converge-iter prev-guess guess x epsilon)
-  (if (converge? prev-guess guess epsilon)
-      guess
-      (sqrt-converge-iter guess (improve guess x) x epsilon)))
-
 (define (sqrt x) 
-  (sqrt-converge-iter 0 1.0 x 0.001))
+  (define (improve guess x)
+    (average guess (/ x guess)))
+  (define (sqrt-iter prev-guess guess x epsilon)
+    (if (converge? prev-guess guess epsilon)
+        guess
+        (sqrt-iter guess (improve guess x) x epsilon)))
+  (sqrt-iter 0 1.0 x 0.001))
 
 (module+ test
   (require rackunit)
