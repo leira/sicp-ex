@@ -11,25 +11,10 @@
 ;; procedure that uses this kind of end test. Does this work better for small
 ;; and large numbers?
 
-(define (square x) (* x x))
-
-(define (average x y) 
-  (/ (+ x y) 2))
+(require "part1-helpers.rkt")
 
 (define (improve guess x)
   (average guess (/ x guess)))
-
-(define (close-enough? guess x)
-  (< (abs (- (square guess) x)) 0.001))
-
-(define (sqrt-close-iter guess x)
-  (if (close-enough? guess x)
-      guess
-      (sqrt-close-iter (improve guess x) x)))
-
-
-(define (converge? prev-guess guess epsilon)
-  (< (/ (abs (- guess prev-guess)) guess) epsilon))
 
 (define (sqrt-converge-iter prev-guess guess x epsilon)
   (if (converge? prev-guess guess epsilon)

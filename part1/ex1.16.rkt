@@ -11,24 +11,23 @@
 ;; an invariant quantity that remains unchanged from state to state is a
 ;; powerful way to think about the design of iterative algorithms.)
 
-(define (square x) (* x x))
+(require "part1-helpers.rkt")
 
-(define (even? n)
-  (= (remainder n 2) 0))
-
-(define (fast-expt-iter a b n)
-  ; a: state, b: base, n: exponent
-  (cond ((= n 0) 
-         a)
-        ((even? n) 
-         (fast-expt-iter a (square b) (/ n 2)))
-        (else 
-         (fast-expt-iter (* a b) b (- n 1)))))
+(define (fast-expt b n)
+  (define (expt-iter a b n)
+    ; a: state, b: base, n: exponent
+    (cond ((= n 0) 
+           a)
+          ((even? n) 
+           (expt-iter a (square b) (/ n 2)))
+          (else 
+           (expt-iter (* a b) b (- n 1)))))
+  (expt-iter 1 b n))
 
 (module+ test
   (require rackunit)
-  (check-equal? (fast-expt-iter 1 2 0) 1)
-  (check-equal? (fast-expt-iter 1 3 1) 3)
-  (check-equal? (fast-expt-iter 1 2 4) 16)
-  (check-equal? (fast-expt-iter 1 2 5) 32))
+  (check-equal? (fast-expt 2 0) 1)
+  (check-equal? (fast-expt 3 1) 3)
+  (check-equal? (fast-expt 2 4) 16)
+  (check-equal? (fast-expt 2 5) 32))
 

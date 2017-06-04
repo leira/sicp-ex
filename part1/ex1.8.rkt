@@ -8,10 +8,7 @@
 ;; square-root procedure. (In 1.3.4 we will see how to implement Newton’s method
 ;; in general as an abstraction of these square-root and cube-root procedures.)
 
-(define (converge? prev-guess guess epsilon)
-  (< (/ (abs (- guess prev-guess)) guess) epsilon))
-
-(define (square x) (* x x))
+(require "part1-helpers.rkt")
 
 (define (cube-root x) 
   (define (improve guess x)
