@@ -23,3 +23,7 @@
 (define (converge? prev-guess guess epsilon)
   (< (/ (abs (- guess prev-guess)) guess) epsilon))
 
+(provide runtime)
+(define (runtime)
+  (inexact->exact (truncate (* 1000 (current-inexact-milliseconds)))))
+
