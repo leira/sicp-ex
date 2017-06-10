@@ -10,16 +10,13 @@
 (define (prime-odd? n)
   (= n (smallest-divisor-odd n)))
 
+(provide fermat-test)
+(define (fermat-test n a)
+  (= (expmod a n n) a))
+
 (provide fast-prime?)
 (define (fast-prime? n)
   (fast-prime-times? n (min n 20)))
-
-(provide fast-prime-times?)
-(define (fast-prime-times? n times)
-  (cond ((= times 0) #t)
-        ((fermat-test n) 
-         (fast-prime-times? n (- times 1)))
-        (else #f)))
 
 (provide timed-prime-test)
 (define (timed-prime-test prime? n)
@@ -71,6 +68,12 @@
 (define (divides? a b)
   (= (remainder b a) 0))
 
+(define (fast-prime-times? n times)
+  (cond ((= times 0) #t)
+        ((fermat-test n (+ 1 (random (- n 1)))) 
+         (fast-prime-times? n (- times 1)))
+        (else #f)))
+
 (define (expmod base exp m)
   (cond ((= exp 0) 1)
         ((even? exp)
@@ -81,11 +84,6 @@
          (remainder 
           (* base (expmod base (- exp 1) m))
           m))))
-
-(define (fermat-test n)
-  (define (try-it a)
-    (= (expmod a n n) a))
-  (try-it (+ 1 (random (- n 1)))))
 
 (module+ test
   (require rackunit)
