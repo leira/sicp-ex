@@ -44,17 +44,12 @@
 
 
 (define (wallis-pi n)
-  (define (numer n)
-    (* (+ (floor (/ n 2))
-          1)
-       2))
-  (define (denom n)
-    (+ ( * (floor (/ (+ n 1) 2))
-           2)
-       1))
-  (* 4 (/ (product numer 1 inc n)
-          (product denom 1 inc n))))
+  (define (term n)
+    (if (even? n)
+        (/ (+ n 2) (+ n 1))
+        (/ (+ n 1) (+ n 2))))
+  (* 4 (product term 1 inc n)))
 
 (module+ test
-  (check-= (exact->inexact (wallis-pi 1000)) pi 0.01))
+  (check-= (wallis-pi 1000) pi 0.01))
 
