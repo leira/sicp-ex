@@ -28,7 +28,6 @@
         (iter (next a) (+ (term a) result))))
   (iter a 0))
 
-
 (module+ test
   (require rackunit)
   (check-equal? (sum cube 1 inc 10) 3025)
