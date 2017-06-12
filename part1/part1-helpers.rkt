@@ -3,6 +3,9 @@
 (provide square)
 (define (square x) (* x x))
 
+(provide cube)
+(define (cube x) (* x x x))
+
 (provide even?)
 (define (even? n)
   (= (remainder n 2) 0))
@@ -26,4 +29,10 @@
 (provide runtime)
 (define (runtime)
   (inexact->exact (truncate (* 1000 (current-inexact-milliseconds)))))
+
+(provide inc)
+(define (inc n) (+ n 1))
+
+(provide identity)
+(define (identity x) x)
 
