@@ -10,6 +10,10 @@
 (define (even? n)
   (= (remainder n 2) 0))
 
+(provide odd?)
+(define (odd? n)
+  (= (remainder n 2) 1))
+
 (provide double)
 (define (double n)
   (arithmetic-shift n 1))

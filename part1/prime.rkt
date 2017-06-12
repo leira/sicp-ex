@@ -4,11 +4,11 @@
 
 (provide prime?)
 (define (prime? n)
-  (= n (smallest-divisor n)))
+  (if (= n 1) #f (= n (smallest-divisor n))))
 
 (provide prime-odd?)
 (define (prime-odd? n)
-  (= n (smallest-divisor-odd n)))
+  (if (= n 1) #f (= n (smallest-divisor-odd n))))
 
 (provide fermat-test)
 (define (fermat-test n a)
