@@ -34,12 +34,13 @@
 
 ;; 1.
 (define (cont-frac-r n d k)
-  ;; not correct
-  (if (= k 0)
+  (define (rec i)
+    (if (> i k)
       0
-      (/ (n k)
-         (+ (d k)
-            (cont-frac-r n d (- k 1))))))
+      (/ (n i)
+         (+ (d i)
+            (rec (+ i 1))))))
+  (rec 1))
 
 (define (inverse-golden-ratio cont-frac k)
   (cont-frac (lambda (i) 1.0)
@@ -48,7 +49,19 @@
 
 (module+ test
   (require rackunit)
-  (check-= (inverse-golden-ratio cont-frac-r 11) 0.61803398875 0.0001))
+  (define (test_1n cont-frac k)
+    (cont-frac (lambda (i) 1)
+               (lambda (i) i)
+               k))
+  (define (test_nn cont-frac k)
+    (cont-frac (lambda (i) i)
+               (lambda (i) i)
+               k))
+  (define (test-cont-frac cont-frac)
+    (check-= (inverse-golden-ratio cont-frac 11) 0.61803398875 0.0001)
+    (check-equal? (test_1n cont-frac 5) 157/225)
+    (check-equal? (test_nn cont-frac 5) 53/91))
+  (test-cont-frac cont-frac-r))
 
 
 ;; 2.
@@ -57,10 +70,10 @@
     (if (= i 0)
         deeper-term
         (iter (- i 1) 
-              (/ (n k)
-                 (+ (d k) deeper-term)))))
+              (/ (n i)
+                 (+ (d i) deeper-term)))))
   (iter k 0))
 
 (module+ test
-  (check-= (inverse-golden-ratio cont-frac-i 11) 0.61803398875 0.0001))
+  (test-cont-frac cont-frac-i))
 
