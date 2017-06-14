@@ -65,7 +65,8 @@
 
 
 ;; 2.
-(define (cont-frac-i n d k)
+(provide cont-frac)
+(define (cont-frac n d k)
   (define (iter i deeper-term)
     (if (= i 0)
         deeper-term
@@ -75,5 +76,5 @@
   (iter k 0))
 
 (module+ test
-  (test-cont-frac cont-frac-i))
+  (test-cont-frac cont-frac))
 
