@@ -23,8 +23,8 @@
   (arithmetic-shift n -1))
 
 (provide average)
-(define (average x y) 
-  (/ (+ x y) 2))
+(define (average . args)
+  (/ (apply + args) (length args)))
 
 (provide converge?)
 (define (converge? prev-guess guess epsilon)
