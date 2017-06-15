@@ -13,6 +13,7 @@
 
 (require "part1-helpers.rkt")
 
+(provide fast-expt)
 (define (fast-expt b n)
   (define (expt-iter a b n)
     ; a: state, b: base, n: exponent

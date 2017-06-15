@@ -40,6 +40,11 @@
 (provide identity)
 (define (identity x) x)
 
+(provide average-damp)
+(define (average-damp f)
+  (lambda (x) 
+    (average x (f x))))
+
 (provide fixed-point)
 (define (fixed-point f first-guess tolerance)
   (define (close-enough? v1 v2)
