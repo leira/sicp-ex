@@ -3,10 +3,9 @@
 ;; Exercise 2.1 http://sarabander.github.io/sicp/html/2_002e1.xhtml#Exercise-2_002e1
 
 (define (make-rat n d)
-  (let ((g (gcd (abs n) (abs d)))
-        (sign (if (< d 0) - identity)))
-    (cons (sign (/ n g))
-          (sign (/ d g)))))
+  (let ((g ((if (< d 0) - +) (abs (gcd  n d)))))
+    (cons (/ n g)
+          (/ d g))))
 
 (define (numer x) (car x))
 (define (denom x) (cdr x))
@@ -15,8 +14,6 @@
   (if (= b 0)
       a
       (gcd b (remainder a b))))
-
-(define (identity x) x)
 
 (module+ test
   (require rackunit)
