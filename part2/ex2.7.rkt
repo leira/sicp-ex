@@ -3,7 +3,7 @@
 ;; Exercise 2.7 http://sarabander.github.io/sicp/html/2_002e1.xhtml#Exercise-2_002e7
 
 (provide make-interval)
-(define (make-interval a b) (cons a b))
+(define (make-interval a b) (cons (min a b) (max a b)))
 
 (provide lower-bound)
 (define (lower-bound interval)
