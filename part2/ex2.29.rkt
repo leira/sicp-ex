@@ -16,6 +16,8 @@
 ;   (car branch))
 ; (define (branch-structure branch)
 ;   (cadr branch))
+(define (structure-mobile? s)
+  (pair? s))
 
 ;; pair implementation
 (define (make-mobile left right)
@@ -34,7 +36,7 @@
   
 (define (branch-weight branch)
   (let ((s (branch-structure branch)))
-    (if (not (pair? s))
+    (if (not (structure-mobile? s))
         s
         (total-weight s))))
 
@@ -49,7 +51,7 @@
        (branch-weight branch)))
   (define (branch-balanced? branch)
     (let ((s (branch-structure branch)))
-      (if (not (pair? s))
+      (if (not (structure-mobile? s))
           #t
           (mobile-balanced? s))))
   (let ((lb (left-branch mobile))
@@ -62,19 +64,16 @@
 
 (module+ test
   (require rackunit)
+  (define l1 (make-mobile
+               (make-branch 2 1)
+               (make-branch 1 2)))
   (define mb
     (make-mobile 
-      (make-branch 2 
-                   (make-mobile
-                     (make-branch 2 1)
-                     (make-branch 1 2)))
+      (make-branch 2 l1)
       (make-branch 2 3)))
   (define mi
     (make-mobile 
-      (make-branch 2 
-                   (make-mobile
-                     (make-branch 2 1)
-                     (make-branch 1 2)))
+      (make-branch 2 l1)
       (make-branch 1 3)))
   (check-equal? (total-weight mb) 6)
   (check-equal? (total-weight mi) 6)
