@@ -2,19 +2,35 @@
 
 ;; Exercise 2.29 http://sarabander.github.io/sicp/html/2_002e2.xhtml#Exercise-2_002e29
 
+;; list implementation
+; (define (make-mobile left right)
+;   (list left right))
+; (define (left-branch mobile)
+;   (car mobile))
+; (define (right-branch mobile)
+;   (cadr mobile))
+; 
+; (define (make-branch length structure)
+;   (list length structure))
+; (define (branch-length branch)
+;   (car branch))
+; (define (branch-structure branch)
+;   (cadr branch))
+
+;; pair implementation
 (define (make-mobile left right)
-  (list left right))
+  (cons left right))
 (define (left-branch mobile)
   (car mobile))
 (define (right-branch mobile)
-  (cadr mobile))
+  (cdr mobile))
 
 (define (make-branch length structure)
-  (list length structure))
+  (cons length structure))
 (define (branch-length branch)
   (car branch))
 (define (branch-structure branch)
-  (cadr branch))
+  (cdr branch))
   
 (define (branch-weight branch)
   (let ((s (branch-structure branch)))
