@@ -16,6 +16,7 @@
 ;;       (cons (accumulate op init ⟨??⟩)
 ;;             (accumulate-n op init ⟨??⟩))))
 
+(provide accumulate-n)
 (define (accumulate-n op init seqs)
   (if (null? (car seqs))
       '()
