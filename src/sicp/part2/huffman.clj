@@ -1,16 +1,16 @@
 (ns sicp.part2.huffman)
 
 (defn make-leaf [symbol weight]
-  (list 'leaf symbol weight))
+  (list :leaf symbol weight))
 (defn leaf? [object]
-  (= (first object) 'leaf))
+  (= (first object) :leaf))
 (defn symbol-leaf [x] (second x))
 (defn weight-leaf [x] (nth x 2))
 
 
 (defn symbols [tree]
   (if (leaf? tree)
-      (list (symbol-leaf tree))
+      (set [(symbol-leaf tree)])
       (nth tree 2)))
 
 (defn weight [tree]
@@ -21,8 +21,8 @@
 (defn make-code-tree [left right]
   (list left
         right
-        (concat (symbols left)
-                (symbols right))
+        (clojure.set/union (symbols left)
+                           (symbols right))
         (+ (weight left) (weight right))))
 
 (defn left-branch [tree] (first tree))
