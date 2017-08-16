@@ -23,6 +23,7 @@
                        tree)
         (encode (rest message) tree))))
 
+
 (deftest encode-sample
   (let [sample-tree
          (make-code-tree
@@ -34,4 +35,4 @@
             (make-leaf 'C 1))))
         sample-message
           '(A D     A B   B   C     A)]
-  (is (=  '(0 1 1 0 0 1 0 1 0 1 1 1 0) (encode sample-message sample-tree)))))
+   (is (= '(0 1 1 0 0 1 0 1 0 1 1 1 0) (encode sample-message sample-tree)))))

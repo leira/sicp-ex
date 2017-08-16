@@ -15,4 +15,4 @@
             (make-leaf 'C 1))))
         sample-message
           '(0 1 1 0 0 1 0 1 0 1 1 1 0)]
-  (is (=  '(A D     A B   B   C     A) (decode sample-message sample-tree)))))
+   (is (= '(A D     A B   B   C     A) (decode sample-message sample-tree)))))
