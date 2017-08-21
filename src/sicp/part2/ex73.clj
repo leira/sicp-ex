@@ -20,62 +20,70 @@
                 var)))
 
 
-(defn operator [exp] (first exp))
-(defn operands [exp] (rest exp))
+(defn- operator [exp] (first exp))
+(defn- operands [exp] (rest exp))
 
-(defn variable? [x] (symbol? x))
-(defn same-variable? [v1 v2]
+(defn- variable? [x] (symbol? x))
+(defn- same-variable? [v1 v2]
   (and (variable? v1)
        (variable? v2)
        (= v1 v2)))
 
-(defn =number? [exp num]
+(defn- =number? [exp num]
   (and (number? exp) (= exp num)))
 
 (defn- right-operand [oprds op]
-  (let [rest (next oprds)]
-    (if (= (count rest) 1)
-        (first rest)
-        (cons op rest))))
-
-(defn make-sum [a1 a2]
-  (cond (=number? a1 0) a2
-        (=number? a2 0) a1
-        (and (number? a1) (number? a2)) (+ a1 a2)
-        :else (list '+ a1 a2)))
-
-(defn addend [s] (first s))
-(defn augend [s] (right-operand s '+))
-
-(defn deriv-sum [oprds var]
-  (make-sum (deriv (addend oprds) var)
-            (deriv (augend oprds) var)))
+  (let [right (rest oprds)]
+    (if (= (count right) 1)
+        (first right)
+        (cons op right))))
 
 
-(defn make-product [m1 m2]
-  (cond (or (=number? m1 0) 
-            (=number? m2 0)) 0
-        (=number? m1 1) m2
-        (=number? m2 1) m1
-        (and (number? m1)
-             (number? m2)) (* m1 m2)
-        :else (list '* m1 m2)))
+(defn- install-deriv-sum []
+  (letfn [(make-sum [a1 a2]
+            (cond (=number? a1 0) a2
+                  (=number? a2 0) a1
+                  (and (number? a1) (number? a2)) (+ a1 a2)
+                  :else (list '+ a1 a2)))
 
-(defn multiplier [s] (first s))
-(defn multiplicand [s] (right-operand s '*))
+          (addend [s] (first s))
+          (augend [s] (right-operand s '+))
 
-(defn deriv-product [oprds var]
-  (make-sum
-   (make-product 
-    (multiplier oprds)
-    (deriv (multiplicand oprds) var))
-   (make-product 
-    (deriv (multiplier oprds) var)
-    (multiplicand oprds))))
+          (deriv-sum [oprds var]
+            (make-sum (deriv (addend oprds) var)
+                      (deriv (augend oprds) var)))]
+    (put-op 'deriv '+ deriv-sum)
+    (put-op 'make '+ make-sum)))
+
+
+(defn- install-deriv-product []
+  (letfn [(make-product [m1 m2]
+            (cond (or (=number? m1 0) 
+                      (=number? m2 0)) 0
+                  (=number? m1 1) m2
+                  (=number? m2 1) m1
+                  (and (number? m1)
+                      (number? m2)) (* m1 m2)
+                  :else (list '* m1 m2)))
+
+          (multiplier [s] (first s))
+          (multiplicand [s] (right-operand s '*))
+
+          (deriv-product [oprds var]
+            ((get-op 'make '+)
+             (make-product 
+              (multiplier oprds)
+              (deriv (multiplicand oprds) var))
+             (make-product 
+              (deriv (multiplier oprds) var)
+              (multiplicand oprds))))]
+    (put-op 'deriv '* deriv-product)
+    (put-op 'make '* make-product)))
+
 
 (defn install-deriv-operators []
-  (put-op 'deriv '+ deriv-sum)
-  (put-op 'deriv '* deriv-product))
+  (install-deriv-sum)
+  (install-deriv-product))
 
 (deftest deriv-test
   (install-deriv-operators)
