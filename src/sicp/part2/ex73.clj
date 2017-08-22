@@ -15,7 +15,8 @@
          (variable? exp) 
          (if (same-variable? exp var) 1 0)
 
-         :else ((get-op 'deriv (operator exp)) 
+;         :else ((get-op 'deriv (operator exp)) 
+         :else ((get-op (operator exp) 'deriv) 
                 (operands exp) 
                 var)))
 
@@ -52,7 +53,8 @@
           (deriv-sum [oprds var]
             (make-sum (deriv (addend oprds) var)
                       (deriv (augend oprds) var)))]
-    (put-op 'deriv '+ deriv-sum)
+;    (put-op 'deriv '+ deriv-sum)
+    (put-op '+ 'deriv deriv-sum)
     (put-op 'make '+ make-sum)))
 
 
@@ -76,7 +78,8 @@
              (make-product 
               (deriv (multiplier oprds) var)
               (multiplicand oprds))))]
-    (put-op 'deriv '* deriv-product)
+;    (put-op 'deriv '* deriv-product)
+    (put-op '* 'deriv deriv-product)
     (put-op 'make '* make-product)))
 
 ;; 3. install exponents
@@ -101,7 +104,8 @@
                    (deriv b var))
                   (throw (Exception. 
                           (str "exponent must be constant (** " b " " e ")."))))))]
-    (put-op 'deriv '** deriv-exponentiation)
+;    (put-op 'deriv '** deriv-exponentiation)
+    (put-op '** 'deriv deriv-exponentiation)
     (put-op 'make '** make-exponentiation)))
 
 (defn install-deriv-operators []
