@@ -38,7 +38,7 @@
         (first right)
         (cons op right))))
 
-
+;; 2. install sum and product
 (defn- install-deriv-sum []
   (letfn [(make-sum [a1 a2]
             (cond (=number? a1 0) a2
@@ -62,8 +62,7 @@
                       (=number? m2 0)) 0
                   (=number? m1 1) m2
                   (=number? m2 1) m1
-                  (and (number? m1)
-                      (number? m2)) (* m1 m2)
+                  (and (number? m1) (number? m2)) (* m1 m2)
                   :else (list '* m1 m2)))
 
           (multiplier [s] (first s))
@@ -80,10 +79,35 @@
     (put-op 'deriv '* deriv-product)
     (put-op 'make '* make-product)))
 
+;; 3. install exponents
+(defn- install-deriv-exponentiation []
+  (letfn [(make-exponentiation [b e]
+            (cond (=number? e 0) 1
+                  (=number? e 1) b
+                  (and (number? b) (number? e)) (int (Math/pow b e))
+                  :else (list '** b e)))
+
+          (base [s] (first s))
+          (exponent [s] (second s))
+
+          (deriv-exponentiation [oprds var]
+            (let [b (base oprds)
+                  e (exponent oprds)]
+              (if (number? e)
+                  ((get-op 'make '*)
+                   ((get-op 'make '*)
+                    e
+                    (make-exponentiation b (- e 1)))
+                   (deriv b var))
+                  (throw (Exception. 
+                          (str "exponent must be constant (** " b " " e ")."))))))]
+    (put-op 'deriv '** deriv-exponentiation)
+    (put-op 'make '** make-exponentiation)))
 
 (defn install-deriv-operators []
   (install-deriv-sum)
-  (install-deriv-product))
+  (install-deriv-product)
+  (install-deriv-exponentiation))
 
 (deftest deriv-test
   (install-deriv-operators)
@@ -96,4 +120,9 @@
   (is (= '(+ (* x y) (* y (+ x 3)))
          (deriv '(* x y (+ x 3)) 'x)))
   (is (= '(+ (+ (* x y) (* y (+ x 3))) 1)
-         (deriv '(+ (* x y (+ x 3)) x 5) 'x))))
+         (deriv '(+ (* x y (+ x 3)) x 5) 'x)))
+  (is (= '(* 5 (** x 4))
+         (deriv '(** x 5) 'x)))
+  (is (= '(+ 1 (* 5 (** x 4)))
+         (deriv '(+ x (** x 5)) 'x)))
+  (is (thrown? Exception (deriv '(** x x) 'x))))
